@@ -1,47 +1,192 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud FinOps Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: inline-block;
+            width: 180px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 300px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 
 <body>
-    <h2>Masukkan Spesifikasi Instance</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <label>Storage Used (GB):</label><br>
-        <input type="number" step="0.1" name="storage" required><br><br>
 
-        <label>Required CPU Hours:</label><br>
-        <input type="number" step="0.1" name="req_cpu" required><br><br>
+    <div class="container">
+        <h2>☁️ CLOUD FINOPS & COST PREDICTOR</h2>
+        <p>Silakan isi spesifikasi di bawah ini:</p>
 
-        <label>Actual CPU Hours:</label><br>
-        <input type="number" step="0.1" name="act_cpu" required><br><br>
+        <form method="POST">
+            {% csrf_token %}
 
-        <label>CPU Utilization %:</label><br>
-        <input type="number" step="0.1" name="cpu_util" required><br><br>
+            <div class="form-group">
+                <label>Storage Used (GB):</label>
+                <input type="number" step="0.1" name="storage" value="0" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Required CPU Hrs:</label>
+                <input type="number" step="0.1" name="req_cpu" value="0" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Actual CPU Hrs:</label>
+                <input type="number" step="0.1" name="act_cpu" value="0" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>CPU Utilization %:</label>
+                <input type="number" step="0.1" name="cpu_util" value="0" min="0" max="100" required>
+            </div>
 
-        <label>Region:</label><br>
-        <select name="region">
-            <option value="US-East-1">US-East-1</option>
-            <option value="Asia-East1">Asia-East1</option>
-        </select><br><br>
+            <div class="form-group">
+                <label>Region:</label>
+                <select name="region" required>
+                    <option value="" disabled selected>-- Pilih Region --</option>
+                    <option value="US-East-1">US-East-1</option>
+                    <option value="US-West-2">US-West-2</option>
+                    <option value="US-Central-1">US-Central-1</option>
+                    <option value="Europe-West3">Europe-West3</option>
+                    <option value="Europe-North1">Europe-North1</option>
+                    <option value="Asia-East1">Asia-East1</option>
+                    <option value="Asia-Southeast1">Asia-Southeast1</option>
+                    <option value="Asia-South1">Asia-South1</option>
+                    <option value="Australia-East1">Australia-East1</option>
+                    <option value="SouthAmerica-East1">SouthAmerica-East1</option>
+                    <option value="Africa-North1">Africa-North1</option>
+                </select>
+            </div>
 
-        <input type="hidden" name="billing" value="Monthly">
-        <input type="hidden" name="service" value="Compute">
-        <input type="hidden" name="status" value="Running">
+            <div class="form-group">
+                <label>Billing Period:</label>
+                <select name="billing" required>
+                    <option value="" disabled selected>-- Pilih Billing Period --</option>
+                    <option value="Hourly">Hourly</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Quarterly">Quarterly</option>
+                    <option value="Annually">Annually</option>
+                </select>
+            </div>
 
-        <button type="submit">🚀 Prediksi Tagihan</button>
-    </form>
+            <div class="form-group">
+                <label>Service Category:</label>
+                <select name="service" required>
+                    <option value="" disabled selected>-- Pilih Service Category --</option>
+                    <option value="Compute">Compute</option>
+                    <option value="Storage">Storage</option>
+                    <option value="Database">Database</option>
+                    <option value="Network">Network</option>
+                    <option value="Analytics">Analytics</option>
+                    <option value="Monitoring">Monitoring</option>
+                    <option value="Security">Security</option>
+                    <option value="CI/CD">CI/CD</option>
+                    <option value="Container">Container</option>
+                    <option value="Serverless">Serverless</option>
+                    <option value="Backup">Backup</option>
+                </select>
+            </div>
 
-    {% if is_post %}
-    <hr>
-    <h3>📊 HASIL ANALISIS CLOUD FINOPS</h3>
-    <p>💰 Estimasi Total Cost: $ {{ pred_cost }}</p>
-    <p>📉 Optimization Potential: $ {{ opt }}</p>
-    <p>⚙️ Status Efisiensi CPU: {{ cpu_efficiency }}</p>
-    <p>📌 Rekomendasi Sistem: {{ rec }}</p>
-    {% endif %}
+            <div class="form-group">
+                <label>Instance Status:</label>
+                <select name="status" required>
+                    <option value="" disabled selected>-- Pilih Instance Status --</option>
+                    <option value="Running">Running</option>
+                    <option value="Idle">Idle</option>
+                    <option value="Stopped">Stopped</option>
+                    <option value="Suspended">Suspended</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Restarting">Restarting</option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Scaling">Scaling</option>
+                    <option value="Migrating">Migrating</option>
+                    <option value="Error">Error</option>
+                    <option value="Archived">Archived</option>
+                    <option value="Terminated">Terminated</option>
+                    <option value="Decommissioned">Decommissioned</option>
+                </select>
+            </div>
+
+            <button type="submit">🚀 Prediksi Tagihan</button>
+        </form>
+
+        {% if is_post %}
+        <div class="result-box">
+            <h3>📊 HASIL ANALISIS CLOUD FINOPS</h3>
+            <hr>
+            <p><strong>💰 Estimasi Total Cost:</strong> $ {{ pred_cost }}</p>
+            <p><strong>📉 Optimization Potential:</strong> $ {{ opt }}</p>
+            <p><strong>⚙️ Status Efisiensi CPU:</strong> {{ cpu_efficiency }}</p>
+            <p><strong>📌 Rekomendasi Sistem:</strong> {{ rec }}</p>
+
+            {% if opt > "0.00" %}
+            <p style="color: #d9534f; margin-top: 15px;">
+                <em>💡 Tips: Instance ini terlalu banyak nganggur. Pertimbangkan downgrade ukuran CPU untuk
+                    berhemat.</em>
+            </p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="result-box" style="background-color: #f8d7da; color: #721c24;">
+            <p><strong>❌ Terjadi Kesalahan:</strong> {{ error }}</p>
+        </div>
+        {% endif %}
+    </div>
+
 </body>
 
 </html>
