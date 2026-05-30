@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/6.0/howto/deployment/asgi/
 
 import os
 
+# pyrefly: ignore [missing-import]
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'finops_project.settings')
 
 application = get_asgi_application()

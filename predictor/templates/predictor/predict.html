@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cloud FinOps Predictor</title>
+</head>
+
+<body>
+    <h2>Masukkan Spesifikasi Instance</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Storage Used (GB):</label><br>
+        <input type="number" step="0.1" name="storage" required><br><br>
+
+        <label>Required CPU Hours:</label><br>
+        <input type="number" step="0.1" name="req_cpu" required><br><br>
+
+        <label>Actual CPU Hours:</label><br>
+        <input type="number" step="0.1" name="act_cpu" required><br><br>
+
+        <label>CPU Utilization %:</label><br>
+        <input type="number" step="0.1" name="cpu_util" required><br><br>
+
+        <label>Region:</label><br>
+        <select name="region">
+            <option value="US-East-1">US-East-1</option>
+            <option value="Asia-East1">Asia-East1</option>
+        </select><br><br>
+
+        <input type="hidden" name="billing" value="Monthly">
+        <input type="hidden" name="service" value="Compute">
+        <input type="hidden" name="status" value="Running">
+
+        <button type="submit">🚀 Prediksi Tagihan</button>
+    </form>
+
+    {% if is_post %}
+    <hr>
+    <h3>📊 HASIL ANALISIS CLOUD FINOPS</h3>
+    <p>💰 Estimasi Total Cost: $ {{ pred_cost }}</p>
+    <p>📉 Optimization Potential: $ {{ opt }}</p>
+    <p>⚙️ Status Efisiensi CPU: {{ cpu_efficiency }}</p>
+    <p>📌 Rekomendasi Sistem: {{ rec }}</p>
+    {% endif %}
+</body>
+
+</html>
