@@ -1,192 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'predictor/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud FinOps Predictor</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f8f9fa;
-        }
-
-        .container {
-            max-width: 600px;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: inline-block;
-            width: 180px;
-            font-weight: bold;
-        }
-
-        input,
-        select {
-            width: 300px;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .result-box {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e9ecef;
-            border-radius: 8px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container">
-        <h2>☁️ CLOUD FINOPS & COST PREDICTOR</h2>
-        <p>Silakan isi spesifikasi di bawah ini:</p>
-
-        <form method="POST">
-            {% csrf_token %}
-
-            <div class="form-group">
-                <label>Storage Used (GB):</label>
-                <input type="number" step="0.1" name="storage" value="0" min="0" required>
-            </div>
-            <div class="form-group">
-                <label>Required CPU Hrs:</label>
-                <input type="number" step="0.1" name="req_cpu" value="0" min="0" required>
-            </div>
-            <div class="form-group">
-                <label>Actual CPU Hrs:</label>
-                <input type="number" step="0.1" name="act_cpu" value="0" min="0" required>
-            </div>
-            <div class="form-group">
-                <label>CPU Utilization %:</label>
-                <input type="number" step="0.1" name="cpu_util" value="0" min="0" max="100" required>
+{% block content %}
+<section class="main-section">
+    <div class="container reveal visible">
+        <div class="glass-container-form">
+            <div class="form-header">
+                <h2><i class="fa-solid fa-flask"></i> Simulator Uji FinOps</h2>
             </div>
 
-            <div class="form-group">
-                <label>Region:</label>
-                <select name="region" required>
-                    <option value="" disabled selected>-- Pilih Region --</option>
-                    <option value="US-East-1">US-East-1</option>
-                    <option value="US-West-2">US-West-2</option>
-                    <option value="US-Central-1">US-Central-1</option>
-                    <option value="Europe-West3">Europe-West3</option>
-                    <option value="Europe-North1">Europe-North1</option>
-                    <option value="Asia-East1">Asia-East1</option>
-                    <option value="Asia-Southeast1">Asia-Southeast1</option>
-                    <option value="Asia-South1">Asia-South1</option>
-                    <option value="Australia-East1">Australia-East1</option>
-                    <option value="SouthAmerica-East1">SouthAmerica-East1</option>
-                    <option value="Africa-North1">Africa-North1</option>
-                </select>
+            <form method="POST" id="predictor-form" action="{% url 'predict' %}">
+                {% csrf_token %}
+                <div class="responsive-form-grid">
+                    <div class="input-field-group">
+                        <label>Storage Used (GB)</label>
+                        <input type="number" step="0.1" name="storage" value="{{ request.POST.storage|default:'0' }}" required>
+                    </div>
+                    <div class="input-field-group">
+                        <label>Required CPU Hrs</label>
+                        <input type="number" step="0.1" name="req_cpu" value="{{ request.POST.req_cpu|default:'0' }}" required>
+                    </div>
+                    <div class="input-field-group">
+                        <label>Actual CPU Hrs</label>
+                        <input type="number" step="0.1" name="act_cpu" value="{{ request.POST.act_cpu|default:'0' }}" required>
+                    </div>
+                    <div class="input-field-group">
+                        <label>CPU Utilization %</label>
+                        <input type="number" step="0.1" name="cpu_util" value="{{ request.POST.cpu_util|default:'0' }}" required>
+                    </div>
+                    <div class="input-field-group">
+                        <label>Cloud Region</label>
+                        <select name="region" required>
+                            <option value="US-East-1">US-East-1</option>
+                            <option value="Asia-Southeast1">Asia-Southeast1</option>
+                            <option value="Europe-West3">Europe-West3</option>
+                        </select>
+                    </div>
+                    <div class="input-field-group">
+                        <label>Billing Period</label>
+                        <select name="billing" required>
+                            <option value="Hourly">Hourly</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="input-field-group">
+                        <label>Service Category</label>
+                        <select name="service" required>
+                            <option value="Compute">Compute</option>
+                            <option value="Storage">Storage</option>
+                            <option value="Database">Database</option>
+                        </select>
+                    </div>
+                    <div class="input-field-group">
+                        <label>Instance Status</label>
+                        <select name="status" required>
+                            <option value="Running">Running</option>
+                            <option value="Idle">Idle</option>
+                            <option value="Stopped">Stopped</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" id="submit-btn" class="action-btn-glow">Jalankan Prediksi Analitik</button>
+            </form>
+
+            {% if is_post %}
+            <div class="results-wrapper-panel" id="output-focus">
+                <h3>Dashboard Hasil Analisis</h3>
+                <div class="metrics-display-grid">
+                    <div class="result-data-card alert-cost">
+                        <span class="card-label">Estimasi Total Tagihan</span>
+                        <span class="card-val">$ {{ pred_cost }}</span>
+                    </div>
+                    <div class="result-data-card alert-save">
+                        <span class="card-label">Potensi Penghematan</span>
+                        <span class="card-val">$ {{ opt }}</span>
+                    </div>
+                    <div class="result-data-card full-row">
+                        <span class="card-label">Efisiensi Kinerja CPU</span>
+                        <span class="card-val text-medium">{{ cpu_efficiency }}</span>
+                    </div>
+                    <div class="result-data-card full-row">
+                        <span class="card-label">Rekomendasi Tindakan</span>
+                        <span class="card-val text-small">{{ rec }}</span>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label>Billing Period:</label>
-                <select name="billing" required>
-                    <option value="" disabled selected>-- Pilih Billing Period --</option>
-                    <option value="Hourly">Hourly</option>
-                    <option value="Daily">Daily</option>
-                    <option value="Weekly">Weekly</option>
-                    <option value="Monthly">Monthly</option>
-                    <option value="Quarterly">Quarterly</option>
-                    <option value="Annually">Annually</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Service Category:</label>
-                <select name="service" required>
-                    <option value="" disabled selected>-- Pilih Service Category --</option>
-                    <option value="Compute">Compute</option>
-                    <option value="Storage">Storage</option>
-                    <option value="Database">Database</option>
-                    <option value="Network">Network</option>
-                    <option value="Analytics">Analytics</option>
-                    <option value="Monitoring">Monitoring</option>
-                    <option value="Security">Security</option>
-                    <option value="CI/CD">CI/CD</option>
-                    <option value="Container">Container</option>
-                    <option value="Serverless">Serverless</option>
-                    <option value="Backup">Backup</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Instance Status:</label>
-                <select name="status" required>
-                    <option value="" disabled selected>-- Pilih Instance Status --</option>
-                    <option value="Running">Running</option>
-                    <option value="Idle">Idle</option>
-                    <option value="Stopped">Stopped</option>
-                    <option value="Suspended">Suspended</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Restarting">Restarting</option>
-                    <option value="Maintenance">Maintenance</option>
-                    <option value="Scaling">Scaling</option>
-                    <option value="Migrating">Migrating</option>
-                    <option value="Error">Error</option>
-                    <option value="Archived">Archived</option>
-                    <option value="Terminated">Terminated</option>
-                    <option value="Decommissioned">Decommissioned</option>
-                </select>
-            </div>
-
-            <button type="submit">🚀 Prediksi Tagihan</button>
-        </form>
-
-        {% if is_post %}
-        <div class="result-box">
-            <h3>📊 HASIL ANALISIS CLOUD FINOPS</h3>
-            <hr>
-            <p><strong>💰 Estimasi Total Cost:</strong> $ {{ pred_cost }}</p>
-            <p><strong>📉 Optimization Potential:</strong> $ {{ opt }}</p>
-            <p><strong>⚙️ Status Efisiensi CPU:</strong> {{ cpu_efficiency }}</p>
-            <p><strong>📌 Rekomendasi Sistem:</strong> {{ rec }}</p>
-
-            {% if opt > "0.00" %}
-            <p style="color: #d9534f; margin-top: 15px;">
-                <em>💡 Tips: Instance ini terlalu banyak nganggur. Pertimbangkan downgrade ukuran CPU untuk
-                    berhemat.</em>
-            </p>
             {% endif %}
-        </div>
-        {% endif %}
 
-        {% if error %}
-        <div class="result-box" style="background-color: #f8d7da; color: #721c24;">
-            <p><strong>❌ Terjadi Kesalahan:</strong> {{ error }}</p>
+            {% if error %}
+            <div class="custom-alert danger">
+                <strong>Error Pemrosesan:</strong> {{ error }}
+            </div>
+            {% endif %}
+
         </div>
-        {% endif %}
     </div>
-
-</body>
-
-</html>
+</section>
+{% endblock %}

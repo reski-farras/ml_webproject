@@ -1,0 +1,23 @@
+{% extends 'predictor/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="main-section">
+    <div class="container reveal visible">
+        <div class="section-header">
+            <h2><i class="fa-solid fa-circle-info"></i> Tentang Aplikasi & Tim</h2>
+        </div>
+        
+        <div class="team-showcase-box">
+            <div class="showcase-img-wrapper">
+                <img src="{% static 'predictor/img/image_30b89d.jpg' %}" alt="Foto Bersama Tim" class="main-team-photo">
+                <div class="photo-overlay"><span><i class="fa-solid fa-users"></i> Project Team</span></div>
+            </div>
+            <div class="showcase-desc">
+                <h3>Sistem Analitik FinOps Terintegrasi</h3>
+                <p>Kami merancang platform ini untuk menjembatani antara kebutuhan performa sistem dan efisiensi finansial arsitektur cloud.</p>
+            </div>
+        </div>
+        </div>
+</section>
+{% endblock %}

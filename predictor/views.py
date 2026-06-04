@@ -23,6 +23,12 @@ except Exception as e:
 def home(request):
     return render(request, 'predictor/home.html')
 
+def about(request):
+    return render(request, 'predictor/about.html')
+
+def akurasi(request):
+    return render(request, 'predictor/akurasi.html')
+
 def predict_cost(request):
     context = {'is_post': False}
     
@@ -67,7 +73,7 @@ def predict_cost(request):
             if cpu_efficiency < 0.6:
                 rec = "⚠️ Underutilized (Overprovisioned)"
                 opt = pred_cost * 0.35
-            elif cpu_efficiency > 1.2:
+            elif cpu_efficiency > 1.0:
                 rec = "🔥 Overutilized (Butuh Upgrade / Scaling)"
                 opt = 0.0
             else:

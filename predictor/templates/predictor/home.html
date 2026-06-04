@@ -1,0 +1,21 @@
+{% extends 'predictor/base.html' %}
+
+{% block content %}
+<section class="main-section">
+    <div class="hero-content reveal visible">
+        <div class="hero-text">
+            <span class="badge">Machine Learning Platform</span>
+            <h1>Optimalisasi Biaya Cloud <br>Dengan Mendalam & Akurat</h1>
+            <p>Hindari pemborosan anggaran infrastruktur cloud (*overprovisioning*) menggunakan analisis prediktif cerdas. Kendalikan penuh efisiensi *resource* komputasi Anda sekarang.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'predict' %}" class="btn-primary">Mulai Pengujian <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="{% url 'about' %}" class="btn-secondary">Pelajari Proyek</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="glow-circle"></div>
+            <i class="fa-solid fa-chart-line floating-icon"></i>
+        </div>
+    </div>
+</section>
+{% endblock %}

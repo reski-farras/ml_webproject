@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud FinOps Predictor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'predictor/css/style.css' %}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><i class="fa-solid fa-cloud-bolt animate-pulse"></i> FinOps<span>Predictor</span></div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}" class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+                <li><a href="{% url 'about' %}" class="nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
+                <li><a href="{% url 'akurasi' %}" class="nav-item {% if request.resolver_match.url_name == 'akurasi' %}active{% endif %}">Akurasi</a></li>
+                <li><a href="{% url 'predict' %}" class="nav-item btn-nav">Testing</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script src="{% static 'predictor/js/script.js' %}"></script>
+</body>
+</html>
