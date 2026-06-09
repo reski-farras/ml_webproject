@@ -22,18 +22,18 @@ function MouseTracker() {
   return <div ref={glowRef} className="cursor-glow" />;
 }
 
-// 2. Animated Background + Grain
-function AnimatedBackground() {
+
+// 2. Video Background Element
+function VideoBackground() {
   return (
-    <>
-      <div className="animated-bg">
-        <div className="grid-overlay" />
-        <div className="orb orb-1" />
-        <div className="orb orb-2" />
-        <div className="orb orb-3" />
-      </div>
-      <div className="grain-overlay" />
-    </>
+    <div className="video-background-container">
+      <video autoPlay loop muted playsInline className="bg-video">
+        {/* Pastikan nama file sesuai dengan yang ada di folder public */}
+        <source src="/cloud-bg.mp4" type="video/mp4" />
+      </video>
+      {/* Overlay ini penting biar video nggak terlalu terang dan teks lu tetep kebaca */}
+      <div className="video-overlay" />
+    </div>
   );
 }
 
@@ -549,20 +549,46 @@ function Testing() {
 
   const handleInputChange = (e) => { setFormData({ ...formData, [e.target.name]: e.target.value }); };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setResult(null);
-    setTimeout(() => {
-      setIsLoading(false);
-      setResult({
-        pred_cost: '245.50', opt: '85.20',
-        cpu_efficiency: '0.45', rec: '⚠️ Underutilized (Overprovisioned)'
+
+    try {
+      // URL ini disesuaikan dengan endpoint API Django yang lu buat di views.py
+      const response = await fetch('http://localhost:8000/api/predict/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData) // Ngirim data dari state React ke Django
       });
+
+      if (!response.ok) {
+        throw new Error("Gagal mengambil prediksi dari server ML");
+      }
+
+      // Menerima hasil balasan dari Django
+      const data = await response.json();
+      
+      // Update result dengan data asli dari AI
+      setResult({
+        pred_cost: data.pred_cost,
+        opt: data.optimization,
+        cpu_efficiency: data.cpu_efficiency,
+        rec: data.recommendation
+      });
+
       setTimeout(() => {
         document.getElementById('output-focus')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
-    }, 1800);
+
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan jaringan atau server Django belum menyala.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -668,7 +694,7 @@ function App() {
   return (
     <Router>
       <MouseTracker />
-      <AnimatedBackground />
+      <VideoBackground />
       <ScrollProgress />
       <Navbar />
       <main>
