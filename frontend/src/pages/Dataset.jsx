@@ -16,7 +16,7 @@ function Dataset() {
             <div className="pipeline-step">
               <div className="pipeline-step-number">1</div>
               <div className="pipeline-step-header">
-                <h3><span className="step-emoji">🧹</span> Pembersihan Data (Data Cleaning)</h3>
+                <h3><span className="step-emoji"></span> Pembersihan Data (Data Cleaning)</h3>
               </div>
               <p className="pipeline-step-desc">
                 Kami menggunakan <strong>Cloud Storage & FinOps Dataset</strong> yang berisi puluhan ribu rekaman transaksi server.
@@ -50,7 +50,7 @@ function Dataset() {
             <div className="pipeline-step">
               <div className="pipeline-step-number">2</div>
               <div className="pipeline-step-header">
-                <h3><span className="step-emoji">🧪</span> Rekayasa Fitur (Feature Engineering)</h3>
+                <h3><span className="step-emoji"></span> Rekayasa Fitur (Feature Engineering)</h3>
               </div>
               <p className="pipeline-step-desc">
                 AI butuh bantuan logika bisnis untuk memahami data. Pada tahap ini, kami menciptakan fitur baru dan mengubah format data:
@@ -78,7 +78,7 @@ function Dataset() {
             <div className="pipeline-step">
               <div className="pipeline-step-number">3</div>
               <div className="pipeline-step-header">
-                <h3><span className="step-emoji">🤖</span> Pelatihan Model (Data Modeling)</h3>
+                <h3><span className="step-emoji"></span> Pelatihan Model (Data Modeling)</h3>
               </div>
               <p className="pipeline-step-desc">
                 Kami membagi data menjadi dua bagian: <strong>80% untuk bahan belajar (Training)</strong> dan <strong>20% untuk ujian (Testing)</strong>.
